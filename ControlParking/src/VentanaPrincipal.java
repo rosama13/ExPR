@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -21,7 +22,17 @@ public class VentanaPrincipal extends JFrame {
 	private JTextField horaEntradaTxt;
 	private JTextField horaSalidaTxt;
 	private JTextField precioPagarTxt;
-
+	private JComboBox listadoCoches;
+	private Coche c;
+	
+	private int in;
+	private int out;
+	private int resultado;
+	private String Resultado;
+	private String textIn;
+	private String textOut;
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -41,6 +52,7 @@ public class VentanaPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public VentanaPrincipal() {
 		setTitle("Control de Parking");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,7 +62,18 @@ public class VentanaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JComboBox listadoCoches = new JComboBox();
+		 final JComboBox<Coche> listadoCoches = new JComboBox<Coche>();
+		listadoCoches.addActionListener(new ActionListener() {
+			//Creamos un evento para darle accion al JComboBox
+			public void actionPerformed(ActionEvent arg0) {
+				c=(Coche) listadoCoches.getItemAt(listadoCoches.getSelectedIndex());
+				matriculaTxt.setText(String.valueOf(c.getMatricula()));
+				horaEntradaTxt.setText(String.valueOf(c.getHentrada()));
+				horaSalidaTxt.setText(String.valueOf(c.getHsalida()));
+				precioPagarTxt.setText(String.valueOf(c.getPrecio()));
+							
+			}
+		});
 		listadoCoches.setBounds(10, 29, 414, 20);
 		contentPane.add(listadoCoches);
 		
@@ -96,6 +119,43 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.add(precioPagarTxt);
 		
 		JButton btnNewButton = new JButton("A PAGAR");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(matriculaTxt.getText().equals(null)){
+					JOptionPane.showMessageDialog(null, "El campo MATRICULA esta vacio");
+				}
+				else if(horaEntradaTxt.getText().equals(null)){
+					JOptionPane.showMessageDialog(null, "El campo HORA DE ENTRADA esta vacio");
+				}
+				else if(horaSalidaTxt.getText().equals(null)){
+					JOptionPane.showMessageDialog(null, "El campo HORA DE SALIDA esta vacio");
+				}
+				else{
+					Coche c= new Coche(listadoCoches);
+					c.setMatricula(String.valueOf(matriculaTxt.getText()));
+					c.setHentrada(Integer.valueOf(horaEntradaTxt.getText()));
+					c.setHsalida(Integer.valueOf(horaSalidaTxt.getText()));
+				
+				
+					textIn=horaEntradaTxt.getText();
+					in=Integer.parseInt(textIn);
+					
+					textOut=horaSalidaTxt.getText();
+					out=Integer.parseInt(textOut);
+					
+					resultado= out-in;
+					
+					Resultado=String.valueOf(resultado);
+					precioPagarTxt.setText(Resultado);
+					
+					c.setPrecio(String.valueOf(precioPagarTxt.getText()));
+					listadoCoches.addItem(c);
+				
+				}
+			}
+
+
+		});
 		btnNewButton.setBounds(230, 58, 194, 128);
 		contentPane.add(btnNewButton);
 		
